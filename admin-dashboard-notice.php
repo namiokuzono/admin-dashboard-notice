@@ -184,7 +184,7 @@ function adn_display_admin_notice() {
             ?>
             <div class="notice notice-woocommerce-support is-dismissible">
                 <p>
-                    <span class="dashicons dashicons-tickets-alt" style="margin-right: 5px;"></span>
+                    <span class="dashicons dashicons-hammer" style="margin-right: 5px;"></span>
                     This site is currently set up for the support case 
                     <a href="<?php echo esc_url($zendesk_url); ?>" target="_blank"><?php echo esc_html($ticket_number . '-zen'); ?></a>
                     <?php if (!empty($notice_message)) : ?>
