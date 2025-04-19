@@ -49,8 +49,8 @@ function adn_debug_page() {
         
         <h2>Options</h2>
         <ul>
-            <li>Notice Message: <?php echo esc_html(get_option('admin_dashboard_notice_message', 'Not set')); ?></li>
-            <li>Notice Type: <?php echo esc_html(get_option('admin_dashboard_notice_type', 'Not set')); ?></li>
+            <li>Notice Message: <?php echo esc_html(get_option('adn_notice_message', 'Not set')); ?></li>
+            <li>Notice Type: <?php echo esc_html(get_option('adn_notice_type', 'Not set')); ?></li>
         </ul>
         
         <h2>Hooks</h2>
@@ -60,6 +60,17 @@ function adn_debug_page() {
             <li>admin_menu: <?php echo has_action('admin_menu') ? 'Yes' : 'No'; ?></li>
             <li>admin_init: <?php echo has_action('admin_init') ? 'Yes' : 'No'; ?></li>
         </ul>
+        
+        <h2>Current Screen</h2>
+        <?php
+        $screen = get_current_screen();
+        if ($screen) {
+            echo '<p>Current screen ID: ' . esc_html($screen->id) . '</p>';
+            echo '<p>Current screen base: ' . esc_html($screen->base) . '</p>';
+        } else {
+            echo '<p>Screen object not available</p>';
+        }
+        ?>
     </div>
     <?php
 } 
