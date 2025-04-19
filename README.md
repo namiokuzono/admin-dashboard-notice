@@ -1,6 +1,6 @@
 # Admin Dashboard Notice
 
-A simple WordPress plugin that displays customizable notices in the WordPress admin dashboard.
+A WordPress plugin to display notices in the admin dashboard. Perfect for WooCommerce support engineers to track Zendesk tickets and display important messages.
 
 ## Description
 
@@ -8,12 +8,17 @@ Admin Dashboard Notice allows you to display customizable notices in your WordPr
 
 ## Features
 
-- Display notices on the WordPress admin dashboard
-- Customizable notice message
-- Different notice types (info, success, warning, error)
-- Dismissible notices
-- Easy to configure through WordPress Settings
-- Settings page for easy customization
+- Display customizable notices in the WordPress admin dashboard
+- Quick Zendesk ticket reference integration
+  - Automatically extracts ticket numbers from Zendesk URLs
+  - Displays ticket reference with clickable link
+  - WooCommerce-specific styling with pastel purple theme
+- Additional message support
+  - Add extra information below Zendesk ticket reference
+  - Or use as standalone notice with different types (info, success, warning, error)
+- Debug mode for troubleshooting
+  - Enable/disable debug information
+  - View plugin settings and configuration
 
 ## Installation
 
@@ -23,12 +28,31 @@ Admin Dashboard Notice allows you to display customizable notices in your WordPr
 
 ## Usage
 
-The plugin will automatically display a default notice on your WordPress admin dashboard. To customize the notice:
+### Basic Notice
 
-1. Go to WordPress Settings > Admin Dashboard Notice
-2. Enter your custom notice message
+1. Go to Notice > Settings in your WordPress admin menu
+2. Enter your message in the "Additional Message" field
 3. Select the notice type (info, success, warning, or error)
-4. Save your changes
+4. Save your settings
+
+### Zendesk Integration
+
+1. Enable the "Quick Zendesk Note" option
+2. Enter your Zendesk ticket URL (e.g., https://a8c.zendesk.com/agent/tickets/1234567)
+3. Add any additional message if needed
+4. Save your settings
+
+The notice will automatically display:
+- The ticket reference (e.g., "1234567-zen")
+- A clickable link to the Zendesk ticket
+- Your additional message below (if provided)
+- WooCommerce-specific styling
+
+### Debug Mode
+
+1. Enable the "Debug Mode" option in the settings
+2. Debug information will be displayed in the admin dashboard
+3. Useful for troubleshooting plugin issues
 
 ## Notice Types
 

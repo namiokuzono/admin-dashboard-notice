@@ -55,6 +55,10 @@ function adn_settings_page() {
                 update_option('adn_zendesk_url', esc_url_raw($_POST['adn_zendesk_url']));
             }
             
+            // Save debug mode setting
+            $debug_enabled = isset($_POST['adn_debug_enabled']) ? 1 : 0;
+            update_option('adn_debug_enabled', $debug_enabled);
+            
             echo '<div class="notice notice-success"><p>Settings saved.</p></div>';
         }
     }
@@ -64,6 +68,7 @@ function adn_settings_page() {
     $notice_type = get_option('adn_notice_type', 'info');
     $zendesk_enabled = get_option('adn_zendesk_enabled', 0);
     $zendesk_url = get_option('adn_zendesk_url', '');
+    $debug_enabled = get_option('adn_debug_enabled', 0);
 
     // Display the settings form
     ?>
@@ -110,6 +115,17 @@ function adn_settings_page() {
                             <option value="error" <?php selected($notice_type, 'error'); ?>>Error</option>
                         </select>
                         <p class="description">Select the type of notice to display (only applies when Zendesk reference is disabled).</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"><label for="adn_debug_enabled">Debug Mode</label></th>
+                    <td>
+                        <label>
+                            <input type="checkbox" name="adn_debug_enabled" id="adn_debug_enabled" value="1" <?php checked($debug_enabled, 1); ?>>
+                            Enable debug mode
+                        </label>
+                        <p class="description">When enabled, shows debug information in the admin dashboard. Useful for troubleshooting.</p>
                     </td>
                 </tr>
             </table>
@@ -201,3 +217,12 @@ function adn_deactivate() {
     // Cleanup if needed
 }
 register_deactivation_hook(__FILE__, 'adn_deactivate');
+
+// Include the debug file for troubleshooting
+function adn_maybe_include_debug() {
+    $debug_enabled = get_option('adn_debug_enabled', 0);
+    if ($debug_enabled) {
+        require_once ADMIN_DASHBOARD_NOTICE_PLUGIN_DIR . 'debug.php';
+    }
+}
+add_action('plugins_loaded', 'adn_maybe_include_debug');
