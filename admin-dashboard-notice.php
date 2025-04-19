@@ -92,8 +92,8 @@ function adn_settings_page() {
                 <tr class="zendesk-url-field" style="<?php echo $zendesk_enabled ? '' : 'display: none;'; ?>">
                     <th scope="row"><label for="adn_zendesk_url">Zendesk URL</label></th>
                     <td>
-                        <input type="url" name="adn_zendesk_url" id="adn_zendesk_url" class="regular-text" value="<?php echo esc_attr($zendesk_url); ?>" placeholder="https://a8c.zendesk.com/agent/tickets/1234567">
-                        <p class="description">Enter the full Zendesk ticket URL (e.g., https://a8c.zendesk.com/agent/tickets/1234567)</p>
+                        <input type="url" name="adn_zendesk_url" id="adn_zendesk_url" class="regular-text" value="<?php echo esc_attr($zendesk_url); ?>" placeholder="https://zendesk.com/agent/tickets/1234567">
+                        <p class="description">Enter the full Zendesk ticket URL (e.g., https://zendesk.com/agent/tickets/1234567)</p>
                     </td>
                 </tr>
                 

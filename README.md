@@ -38,7 +38,7 @@ Admin Dashboard Notice allows you to display customizable notices in your WordPr
 ### Zendesk Integration
 
 1. Enable the "Quick Zendesk Note" option
-2. Enter your Zendesk ticket URL (e.g., https://a8c.zendesk.com/agent/tickets/1234567)
+2. Enter your Zendesk ticket URL (e.g., https://zendesk.com/agent/tickets/1234567)
 3. Add any additional message if needed
 4. Save your settings
 
