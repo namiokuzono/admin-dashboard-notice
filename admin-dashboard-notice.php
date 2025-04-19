@@ -46,6 +46,15 @@ function adn_settings_page() {
         if (isset($_POST['adn_notice_message']) && isset($_POST['adn_notice_type'])) {
             update_option('adn_notice_message', sanitize_text_field($_POST['adn_notice_message']));
             update_option('adn_notice_type', sanitize_text_field($_POST['adn_notice_type']));
+            
+            // Save Zendesk settings
+            $zendesk_enabled = isset($_POST['adn_zendesk_enabled']) ? 1 : 0;
+            update_option('adn_zendesk_enabled', $zendesk_enabled);
+            
+            if ($zendesk_enabled && isset($_POST['adn_zendesk_url'])) {
+                update_option('adn_zendesk_url', esc_url_raw($_POST['adn_zendesk_url']));
+            }
+            
             echo '<div class="notice notice-success"><p>Settings saved.</p></div>';
         }
     }
@@ -53,6 +62,8 @@ function adn_settings_page() {
     // Get current settings
     $notice_message = get_option('adn_notice_message', '');
     $notice_type = get_option('adn_notice_type', 'info');
+    $zendesk_enabled = get_option('adn_zendesk_enabled', 0);
+    $zendesk_url = get_option('adn_zendesk_url', '');
 
     // Display the settings form
     ?>
@@ -63,12 +74,32 @@ function adn_settings_page() {
         <form method="post" action="">
             <table class="form-table">
                 <tr>
-                    <th scope="row"><label for="adn_notice_message">Notice Message</label></th>
+                    <th scope="row"><label for="adn_zendesk_enabled">Quick Zendesk Note</label></th>
                     <td>
-                        <textarea name="adn_notice_message" id="adn_notice_message" rows="3" cols="50" class="large-text"><?php echo esc_textarea($notice_message); ?></textarea>
-                        <p class="description">Enter the message you want to display in the notice.</p>
+                        <label>
+                            <input type="checkbox" name="adn_zendesk_enabled" id="adn_zendesk_enabled" value="1" <?php checked($zendesk_enabled, 1); ?>>
+                            Enable Zendesk ticket reference
+                        </label>
+                        <p class="description">When enabled, displays a Zendesk ticket reference in the dashboard notice.</p>
                     </td>
                 </tr>
+                
+                <tr class="zendesk-url-field" style="<?php echo $zendesk_enabled ? '' : 'display: none;'; ?>">
+                    <th scope="row"><label for="adn_zendesk_url">Zendesk URL</label></th>
+                    <td>
+                        <input type="url" name="adn_zendesk_url" id="adn_zendesk_url" class="regular-text" value="<?php echo esc_attr($zendesk_url); ?>" placeholder="https://a8c.zendesk.com/agent/tickets/1234567">
+                        <p class="description">Enter the full Zendesk ticket URL (e.g., https://a8c.zendesk.com/agent/tickets/1234567)</p>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <th scope="row"><label for="adn_notice_message">Additional Message</label></th>
+                    <td>
+                        <textarea name="adn_notice_message" id="adn_notice_message" rows="3" cols="50" class="large-text"><?php echo esc_textarea($notice_message); ?></textarea>
+                        <p class="description">Enter any additional message to display below the Zendesk reference (if enabled) or as a regular notice.</p>
+                    </td>
+                </tr>
+                
                 <tr>
                     <th scope="row"><label for="adn_notice_type">Notice Type</label></th>
                     <td>
@@ -78,7 +109,7 @@ function adn_settings_page() {
                             <option value="warning" <?php selected($notice_type, 'warning'); ?>>Warning</option>
                             <option value="error" <?php selected($notice_type, 'error'); ?>>Error</option>
                         </select>
-                        <p class="description">Select the type of notice to display.</p>
+                        <p class="description">Select the type of notice to display (only applies when Zendesk reference is disabled).</p>
                     </td>
                 </tr>
             </table>
@@ -87,8 +118,36 @@ function adn_settings_page() {
             </p>
         </form>
     </div>
+    
+    <script>
+    jQuery(document).ready(function($) {
+        $('#adn_zendesk_enabled').change(function() {
+            if ($(this).is(':checked')) {
+                $('.zendesk-url-field').show();
+            } else {
+                $('.zendesk-url-field').hide();
+            }
+        });
+    });
+    </script>
     <?php
 }
+
+// Add custom styles for WooCommerce support notices
+function adn_admin_styles() {
+    ?>
+    <style>
+        .notice-woocommerce-support {
+            border-left-color: #9b6b9e !important;
+            background-color: #f9f5f9 !important;
+        }
+        .notice-woocommerce-support .dashicons {
+            color: #9b6b9e;
+        }
+    </style>
+    <?php
+}
+add_action('admin_head', 'adn_admin_styles');
 
 // Display notice on admin dashboard
 function adn_display_admin_notice() {
@@ -97,17 +156,35 @@ function adn_display_admin_notice() {
         return;
     }
 
-    $notice_message = get_option('adn_notice_message', 'Welcome to your WordPress dashboard!');
+    $zendesk_enabled = get_option('adn_zendesk_enabled', 0);
+    $zendesk_url = get_option('adn_zendesk_url', '');
+    $notice_message = get_option('adn_notice_message', '');
     $notice_type = get_option('adn_notice_type', 'info');
-    
-    if (empty($notice_message)) {
-        return;
+
+    if ($zendesk_enabled && !empty($zendesk_url)) {
+        // Extract ticket number from Zendesk URL
+        if (preg_match('/tickets\/(\d+)/', $zendesk_url, $matches)) {
+            $ticket_number = $matches[1];
+            ?>
+            <div class="notice notice-woocommerce-support is-dismissible">
+                <p>
+                    <span class="dashicons dashicons-tickets-alt" style="margin-right: 5px;"></span>
+                    This site is currently set up for the support case 
+                    <a href="<?php echo esc_url($zendesk_url); ?>" target="_blank"><?php echo esc_html($ticket_number . '-zen'); ?></a>
+                    <?php if (!empty($notice_message)) : ?>
+                        <br><br><?php echo wp_kses_post($notice_message); ?>
+                    <?php endif; ?>
+                </p>
+            </div>
+            <?php
+        }
+    } elseif (!empty($notice_message)) {
+        ?>
+        <div class="notice notice-<?php echo esc_attr($notice_type); ?> is-dismissible">
+            <p><?php echo wp_kses_post($notice_message); ?></p>
+        </div>
+        <?php
     }
-    ?>
-    <div class="notice notice-<?php echo esc_attr($notice_type); ?> is-dismissible">
-        <p><?php echo wp_kses_post($notice_message); ?></p>
-    </div>
-    <?php
 }
 add_action('admin_notices', 'adn_display_admin_notice');
 
