@@ -27,12 +27,14 @@ require_once ADMIN_DASHBOARD_NOTICE_PLUGIN_DIR . 'debug.php';
 
 // Add menu item to the admin bar
 function adn_add_admin_menu() {
-    add_options_page(
+    add_menu_page(
         'Admin Dashboard Notice Settings',
-        'Admin Dashboard Notice',
+        'Notice',
         'manage_options',
         'admin-dashboard-notice',
-        'adn_settings_page'
+        'adn_settings_page',
+        'dashicons-megaphone',
+        30
     );
 }
 add_action('admin_menu', 'adn_add_admin_menu');
@@ -40,44 +42,49 @@ add_action('admin_menu', 'adn_add_admin_menu');
 // Create the settings page
 function adn_settings_page() {
     // Save settings if form is submitted
-    if (isset($_POST['adn_notice_message']) && check_admin_referer('adn_save_notice')) {
-        update_option('adn_notice_message', sanitize_textarea_field($_POST['adn_notice_message']));
-        update_option('adn_notice_type', sanitize_text_field($_POST['adn_notice_type']));
-        echo '<div class="notice notice-success"><p>Settings saved successfully!</p></div>';
+    if (isset($_POST['adn_save_settings'])) {
+        if (isset($_POST['adn_notice_message']) && isset($_POST['adn_notice_type'])) {
+            update_option('adn_notice_message', sanitize_text_field($_POST['adn_notice_message']));
+            update_option('adn_notice_type', sanitize_text_field($_POST['adn_notice_type']));
+            echo '<div class="notice notice-success"><p>Settings saved.</p></div>';
+        }
     }
 
-    // Get current notice message
-    $notice_message = get_option('adn_notice_message', 'Welcome to your WordPress dashboard!');
+    // Get current settings
+    $notice_message = get_option('adn_notice_message', '');
     $notice_type = get_option('adn_notice_type', 'info');
+
+    // Display the settings form
     ?>
     <div class="wrap">
-        <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
+        <h1><span class="dashicons dashicons-megaphone" style="font-size: 30px; width: 30px; height: 30px; margin-right: 10px;"></span> Admin Dashboard Notice Settings</h1>
+        <p>Configure the notice that appears on your WordPress admin dashboard.</p>
+        
         <form method="post" action="">
-            <?php wp_nonce_field('adn_save_notice'); ?>
             <table class="form-table">
                 <tr>
-                    <th scope="row">
-                        <label for="adn_notice_message">Notice Message</label>
-                    </th>
+                    <th scope="row"><label for="adn_notice_message">Notice Message</label></th>
                     <td>
-                        <textarea name="adn_notice_message" id="adn_notice_message" class="large-text" rows="5"><?php echo esc_textarea($notice_message); ?></textarea>
+                        <textarea name="adn_notice_message" id="adn_notice_message" rows="3" cols="50" class="large-text"><?php echo esc_textarea($notice_message); ?></textarea>
+                        <p class="description">Enter the message you want to display in the notice.</p>
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row">
-                        <label for="adn_notice_type">Notice Type</label>
-                    </th>
+                    <th scope="row"><label for="adn_notice_type">Notice Type</label></th>
                     <td>
                         <select name="adn_notice_type" id="adn_notice_type">
-                            <option value="info" <?php selected($notice_type, 'info'); ?>>Info (Blue)</option>
-                            <option value="success" <?php selected($notice_type, 'success'); ?>>Success (Green)</option>
-                            <option value="warning" <?php selected($notice_type, 'warning'); ?>>Warning (Yellow)</option>
-                            <option value="error" <?php selected($notice_type, 'error'); ?>>Error (Red)</option>
+                            <option value="info" <?php selected($notice_type, 'info'); ?>>Info</option>
+                            <option value="success" <?php selected($notice_type, 'success'); ?>>Success</option>
+                            <option value="warning" <?php selected($notice_type, 'warning'); ?>>Warning</option>
+                            <option value="error" <?php selected($notice_type, 'error'); ?>>Error</option>
                         </select>
+                        <p class="description">Select the type of notice to display.</p>
                     </td>
                 </tr>
             </table>
-            <?php submit_button('Save Notice'); ?>
+            <p class="submit">
+                <input type="submit" name="adn_save_settings" class="button button-primary" value="Save Settings">
+            </p>
         </form>
     </div>
     <?php
