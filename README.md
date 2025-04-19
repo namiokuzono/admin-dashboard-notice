@@ -12,7 +12,8 @@ Admin Dashboard Notice allows you to display customizable notices in your WordPr
 - Customizable notice message
 - Different notice types (info, success, warning, error)
 - Dismissible notices
-- Easy to configure
+- Easy to configure through WordPress Settings
+- Settings page for easy customization
 
 ## Installation
 
@@ -24,18 +25,17 @@ Admin Dashboard Notice allows you to display customizable notices in your WordPr
 
 The plugin will automatically display a default notice on your WordPress admin dashboard. To customize the notice:
 
-1. Go to WordPress Settings
-2. Look for the "Admin Dashboard Notice" section
-3. Enter your custom notice message
-4. Select the notice type
-5. Save your changes
+1. Go to WordPress Settings > Admin Dashboard Notice
+2. Enter your custom notice message
+3. Select the notice type (info, success, warning, or error)
+4. Save your changes
 
 ## Notice Types
 
-- Info (blue)
-- Success (green)
-- Warning (yellow)
-- Error (red)
+- Info (blue) - For general information
+- Success (green) - For success messages
+- Warning (yellow) - For warnings or important notices
+- Error (red) - For error messages or critical alerts
 
 ## Requirements
 

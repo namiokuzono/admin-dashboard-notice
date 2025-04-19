@@ -58,6 +58,9 @@ class Admin_Dashboard_Notice {
 
         // The class responsible for defining all actions that occur in the admin area
         require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-admin-dashboard-notice-admin.php';
+        
+        // The class responsible for the settings page
+        require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-admin-dashboard-notice-settings.php';
 
         $this->loader = new Admin_Dashboard_Notice_Loader();
     }
@@ -71,8 +74,14 @@ class Admin_Dashboard_Notice {
      */
     private function define_admin_hooks() {
         $plugin_admin = new Admin_Dashboard_Notice_Admin($this->get_plugin_name(), $this->get_version());
+        $plugin_settings = new Admin_Dashboard_Notice_Settings($this->get_plugin_name(), $this->get_version());
 
+        // Admin notice hook
         $this->loader->add_action('admin_notices', $plugin_admin, 'display_admin_notice');
+        
+        // Settings page hooks
+        $this->loader->add_action('admin_menu', $plugin_settings, 'register_settings_page');
+        $this->loader->add_action('admin_init', $plugin_settings, 'register_settings');
     }
 
     /**
@@ -96,7 +105,7 @@ class Admin_Dashboard_Notice {
     }
 
     /**
-     * The reference to the class that orchestrates the hooks with the plugin.
+     * The reference to the class that orchestrates the hooks of the plugin.
      *
      * @since     1.0.0
      * @return    Admin_Dashboard_Notice_Loader    Orchestrates the hooks of the plugin.

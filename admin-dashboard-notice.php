@@ -22,6 +22,9 @@ define('ADMIN_DASHBOARD_NOTICE_VERSION', '1.0.0');
 define('ADMIN_DASHBOARD_NOTICE_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('ADMIN_DASHBOARD_NOTICE_PLUGIN_URL', plugin_dir_url(__FILE__));
 
+// Include the debug file for troubleshooting
+require_once ADMIN_DASHBOARD_NOTICE_PLUGIN_DIR . 'debug.php';
+
 // Include the main plugin class
 require_once ADMIN_DASHBOARD_NOTICE_PLUGIN_DIR . 'includes/class-admin-dashboard-notice.php';
 
@@ -30,4 +33,4 @@ function run_admin_dashboard_notice() {
     $plugin = new Admin_Dashboard_Notice();
     $plugin->run();
 }
-run_admin_dashboard_notice(); 
+run_admin_dashboard_notice();

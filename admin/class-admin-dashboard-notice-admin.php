@@ -45,7 +45,7 @@ class Admin_Dashboard_Notice_Admin {
         $screen = get_current_screen();
         
         // Only show on dashboard
-        if ($screen->id !== 'dashboard') {
+        if (!$screen || $screen->id !== 'dashboard') {
             return;
         }
 
