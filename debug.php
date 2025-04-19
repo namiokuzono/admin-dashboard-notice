@@ -10,15 +10,20 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-// Add a simple notice to test if admin_notices hook is working
-function adn_debug_notice() {
+// Only proceed if debug mode is enabled
+if (!get_option('adn_debug_enabled', 0)) {
+    return;
+}
+
+// Add a test notice to verify the admin_notices hook is working
+function adn_debug_test_notice() {
     ?>
     <div class="notice notice-info is-dismissible">
         <p>This is a test notice from the debug file. If you can see this, the admin_notices hook is working.</p>
     </div>
     <?php
 }
-add_action('admin_notices', 'adn_debug_notice');
+add_action('admin_notices', 'adn_debug_test_notice');
 
 // Add a simple menu item to test if admin_menu hook is working
 function adn_debug_menu() {
@@ -73,4 +78,23 @@ function adn_debug_page() {
         ?>
     </div>
     <?php
-} 
+}
+
+// Add debug information to the admin footer
+function adn_debug_admin_footer() {
+    ?>
+    <div class="notice notice-info">
+        <h3>Admin Dashboard Notice Debug Information</h3>
+        <p>This information is only visible when debug mode is enabled.</p>
+        <ul>
+            <li>Plugin Version: <?php echo ADMIN_DASHBOARD_NOTICE_VERSION; ?></li>
+            <li>Debug Mode: Enabled</li>
+            <li>Zendesk Enabled: <?php echo get_option('adn_zendesk_enabled', 0) ? 'Yes' : 'No'; ?></li>
+            <li>Zendesk URL: <?php echo esc_html(get_option('adn_zendesk_url', '')); ?></li>
+            <li>Notice Message: <?php echo esc_html(get_option('adn_notice_message', '')); ?></li>
+            <li>Notice Type: <?php echo esc_html(get_option('adn_notice_type', 'info')); ?></li>
+        </ul>
+    </div>
+    <?php
+}
+add_action('admin_footer', 'adn_debug_admin_footer'); 
