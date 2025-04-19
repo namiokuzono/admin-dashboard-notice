@@ -48,4 +48,4 @@ This project is licensed under the GPL v2 or later - see the [LICENSE](LICENSE) 
 
 ## Author
 
-Created by [a8cnam](https://github.com/a8cnam) 
+Created by [Nami Okuzono](https://github.com/a8cnam) 
